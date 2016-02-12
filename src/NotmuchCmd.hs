@@ -71,6 +71,8 @@ import Text.ParserCombinators.ReadP (readP_to_S)
 import System.Process
 import System.Exit
 import Yesod (PathPiece)
+import Control.Monad.Trans.Resource
+import Data.Conduit.ProcessOld
 
 import qualified Data.Vector as V
 import qualified Data.Text as T
@@ -224,7 +226,7 @@ notmuchShow (ThreadID t) = do
     ts <- notmuchJson ["show", "--format=json", "--format-version=1", "thread:" ++ t]
     return $ Thread $ concat $ map threadForest ts
 
-notmuchMessagePart :: (MonadIO m, MonadResource m') 
+notmuchMessagePart :: (MonadIO m, MonadResource m')
                    => MessageID -> Int -> (m MessagePart, Source m' ByteString)
 notmuchMessagePart (MessageID m) num = (msg, sourceProcess process)
   where
@@ -281,7 +283,7 @@ notmuchRaw args = liftIO $ readProcessWithExitCode "notmuch" args ""
 
 -- | A helper function to run notmuch and parse the result from json.  For this
 -- to work, the arguments must include '--format=json'.
-notmuchJson :: (MonadIO m, FromJSON a) 
+notmuchJson :: (MonadIO m, FromJSON a)
             => [String]       -- ^ Arguments
             -> m a
 notmuchJson args = liftIO $ do

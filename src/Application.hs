@@ -1,3 +1,4 @@
+{-# LANGUAGE ViewPatterns #-}
 {-
 Copyright (C) 2013 John Lenz <lenz@math.uic.edu>
 

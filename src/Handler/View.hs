@@ -15,6 +15,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -}
 {-# LANGUAGE RecordWildCards, ScopedTypeVariables #-}
+{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE QuasiQuotes #-}
 module Handler.View(
     threadWidget
   , threadHeader
@@ -39,6 +41,7 @@ import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import qualified Data.Text.Lazy as TL
 import qualified Data.Tree as TR
+import Control.Monad.Trans.Resource
 
 #ifdef USE_ICU
 import qualified Data.Text.ICU.Convert as ICU

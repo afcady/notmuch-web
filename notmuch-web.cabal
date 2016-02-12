@@ -107,7 +107,7 @@ library
 
                      , aeson
                      , attoparsec
-                     , attoparsec-conduit
+                     , conduit-extra
                      , blaze-builder
                      , blaze-html
                      , blaze-markup
@@ -120,6 +120,7 @@ library
                      , email-validate
                      , filepath
                      , hamlet
+                     , shakespeare
                      -- https://github.com/bos/aeson/issues/125 and https://github.com/tibbe/hashable/issues/66
                      , hashable                      <= 1.2.0.5 || > 1.2.0.7
                      , hjsmin
@@ -146,15 +147,16 @@ library
                      , warp
                      , xss-sanitize                  >= 0.3.4
                      , yaml
-                     , yesod                         >= 1.2    && < 1.3
+                     , yesod                         >= 1.2
                      , yesod-auth
-                     , yesod-static                  >= 1.2.1  && < 1.3
+                     , yesod-static                  >= 1.2.1
+                     , resourcet
     else
         build-depends: base                          >= 4          && < 5
 
                      , aeson
                      , attoparsec
-                     , attoparsec-conduit
+                     , conduit-extra
                      , blaze-builder
                      , blaze-html
                      , blaze-markup
@@ -167,6 +169,7 @@ library
                      , email-validate
                      , filepath
                      , hamlet
+                     , shakespeare
                      -- https://github.com/bos/aeson/issues/125 and https://github.com/tibbe/hashable/issues/66
                      , hashable                      <= 1.2.0.5 || > 1.2.0.7
                      , hjsmin
@@ -194,9 +197,10 @@ library
                      , warp
                      , xss-sanitize                  >= 0.3.4
                      , yaml
-                     , yesod                         >= 1.2    && < 1.3
+                     , yesod                         >= 1.2
                      , yesod-auth
-                     , yesod-static                  >= 1.2.1  && < 1.3
+                     , yesod-static                  >= 1.2.1
+                     , resourcet
 
 executable         notmuch-web
     if flag(library-only)

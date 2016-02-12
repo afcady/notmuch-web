@@ -1,4 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
+{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE QuasiQuotes #-}
 {-
 Copyright (C) 2013 John Lenz <lenz@math.uic.edu>
 
@@ -32,7 +34,6 @@ import Data.String (fromString)
 import Data.Time
 import Network.Mail.Mime hiding (partContent)
 import System.FilePath ((</>))
-import System.Locale
 import System.Random (randomIO)
 import Text.Blaze.Html.Renderer.Utf8 (renderHtml)
 import Text.Markdown
@@ -50,9 +51,6 @@ import qualified Data.Text.Lazy.IO as TL
 -----------------------------------------------------------------------------------------
 -- Compose Form
 -----------------------------------------------------------------------------------------
-
-instance Eq Address where
-    (Address a1 a2) == (Address b1 b2) = a1 == b1 && a2 == b2
 
 -- | Lookup From addresses in the settings
 fromAddresses :: (MonadHandler m, HandlerSite m ~ App) => m (OptionList Address)

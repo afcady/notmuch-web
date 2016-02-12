@@ -24,6 +24,8 @@ import qualified Data.Text as T
 import qualified Data.Vector as V
 import qualified Data.Conduit.List as C
 import qualified Data.Conduit.Text as C
+import Control.Monad.Trans.Resource
+import Data.Conduit.ProcessOld
 
 -- | Abook returns an entry as "<email addr><tab><name><tab>".  This function parses
 -- such a line into a JSON value.
