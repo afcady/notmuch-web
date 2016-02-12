@@ -102,105 +102,57 @@ library
                 EmptyDataDecls
                 NoMonomorphismRestriction
 
+    build-depends:   base                          >= 4          && < 5
+                     , aeson
+                     , attoparsec
+                     , conduit-extra
+                     , blaze-builder
+                     , blaze-html
+                     , blaze-markup
+                     , bytestring
+                     , case-insensitive
+                     , conduit
+                     , containers
+                     , directory
+                     , data-default
+                     , email-validate
+                     , filepath
+                     , hamlet
+                     , shakespeare
+                     -- https://github.com/bos/aeson/issues/125 and https://github.com/tibbe/hashable/issues/66
+                     , hashable                      <= 1.2.0.5 || > 1.2.0.7
+                     , hjsmin
+                     , http-conduit
+                     , http-types
+                     , lifted-base
+                     , markdown                      >= 0.1.5
+                     , mime-mail
+                     , network
+                     , old-locale
+                     , process
+                     , process-conduit               >= 0.5
+                     , pwstore-fast
+                     , random
+                     , tagsoup
+                     , template-haskell
+                     , text
+                     , time
+                     , transformers
+                     , unordered-containers
+                     , vector
+                     , wai
+                     , wai-extra
+                     , warp
+                     , xss-sanitize                  >= 0.3.4
+                     , yaml
+                     , yesod                         >= 1.2
+                     , yesod-auth
+                     , yesod-static                  >= 1.2.1
+                     , resourcet
     if flag(no-icu)
-        build-depends: base                          >= 4          && < 5
-
-                     , aeson
-                     , attoparsec
-                     , conduit-extra
-                     , blaze-builder
-                     , blaze-html
-                     , blaze-markup
-                     , bytestring
-                     , case-insensitive
-                     , conduit
-                     , containers
-                     , directory
-                     , data-default
-                     , email-validate
-                     , filepath
-                     , hamlet
-                     , shakespeare
-                     -- https://github.com/bos/aeson/issues/125 and https://github.com/tibbe/hashable/issues/66
-                     , hashable                      <= 1.2.0.5 || > 1.2.0.7
-                     , hjsmin
-                     , http-conduit
-                     , http-types
-                     , lifted-base
-                     , markdown                      >= 0.1.5
-                     , mime-mail
-                     , network
-                     , old-locale
-                     , process
-                     , process-conduit               >= 0.5
-                     , pwstore-fast
-                     , random
-                     , tagsoup
-                     , template-haskell
-                     , text
-                     , time
-                     , transformers
-                     , unordered-containers
-                     , vector
-                     , wai
-                     , wai-extra
-                     , warp
-                     , xss-sanitize                  >= 0.3.4
-                     , yaml
-                     , yesod                         >= 1.2
-                     , yesod-auth
-                     , yesod-static                  >= 1.2.1
-                     , resourcet
+        build-depends:
     else
-        build-depends: base                          >= 4          && < 5
-
-                     , aeson
-                     , attoparsec
-                     , conduit-extra
-                     , blaze-builder
-                     , blaze-html
-                     , blaze-markup
-                     , bytestring
-                     , case-insensitive
-                     , conduit
-                     , containers
-                     , data-default
-                     , directory
-                     , email-validate
-                     , filepath
-                     , hamlet
-                     , shakespeare
-                     -- https://github.com/bos/aeson/issues/125 and https://github.com/tibbe/hashable/issues/66
-                     , hashable                      <= 1.2.0.5 || > 1.2.0.7
-                     , hjsmin
-                     , http-conduit
-                     , http-types
-                     , lifted-base
-                     , markdown                      >= 0.1.5
-                     , mime-mail
-                     , network
-                     , old-locale
-                     , process
-                     , process-conduit               >= 0.5
-                     , pwstore-fast
-                     , random
-                     , tagsoup
-                     , template-haskell
-                     , text
-                     , text-icu
-                     , time
-                     , transformers
-                     , unordered-containers
-                     , vector
-                     , wai
-                     , wai-extra
-                     , warp
-                     , xss-sanitize                  >= 0.3.4
-                     , yaml
-                     , yesod                         >= 1.2
-                     , yesod-auth
-                     , yesod-static                  >= 1.2.1
-                     , resourcet
+        build-depends: text-icu
 
 executable         notmuch-web
     if flag(library-only)
