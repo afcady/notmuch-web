@@ -158,7 +158,7 @@ executable         notmuch-web
     if flag(library-only)
         Buildable: False
 
-    main-is:           main.hs
+    main-is:           src/main.hs
     build-depends:     base
                      , notmuch-web
                      , pwstore-fast
