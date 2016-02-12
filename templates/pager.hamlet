@@ -1,0 +1,32 @@
+<script type="text/javascript">
+    window.notmuchweb_threads = #{encodeSearch ur search};
+^{threadHeader}
+<div #threadpane>
+    $case (listToMaybe search)
+        $of Just x
+            ^{threadWidget (searchThread x)}
+        $of Nothing
+<div #threadpager .navbar .navbar-fixed-bottom>
+    <div .navbar-inner>
+        <div .container>
+            <ul .pager>
+                <li .previous>
+                    <span #pager-cur-num>1
+                    <span #pager-max-num>#{length search}
+                <li>
+                    <div .btn-group>
+                        $forall r <- retags
+                            <button .btn .btn-link .pager-retag title=#{retagName r} data-notmuch-url=@{RetagThreadR (ThreadID "") (retagName r)}>
+                                <i class="#{retagIcon r}">
+                $case (listToMaybe search)
+                    $of Nothing
+                        <li .next .disabled #nextthreadli>
+                            <a href="#" #nextthread>Next &rarr;
+                    $of Just _
+                        $case (listToMaybe $ tail search)
+                            $of Nothing
+                                <li .next .disabled #nextthreadli>
+                                    <a href="#" #nextthread>Next &rarr;
+                            $of Just y
+                                <li .next #nextthreadli>
+                                    <a href="@{ThreadR (searchThread y)}" #nextthread data-notmuch-thread-index="1">Next &rarr;

@@ -1,0 +1,19 @@
+<p>
+    <a .hide-noscript href=@{ThreadPagerR s}>_{MsgViewInPager}
+<table .table .table-striped .table-condensed>
+  <thead>
+    <tr>
+      <th .only-noscript>
+      <th>_{MsgDate}
+      <th>_{MsgSubject}
+      <th>_{MsgAuthors}
+      <th>_{MsgTags}
+  <tbody>
+    $forall r <- search
+      <tr>
+        <td .only-noscript>
+            <a href="@{ThreadR (searchThread r)}">Open
+        <td .search-link onclick="document.location = '@{ThreadR (searchThread r)}'">#{searchDateRel r}
+        <td .search-link onclick="document.location = '@{ThreadR (searchThread r)}'">#{searchSubject r}
+        <td .search-link onclick="document.location = '@{ThreadR (searchThread r)}'">#{searchAuthors r}
+        <td>^{tagWidget (Left r)}

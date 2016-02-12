@@ -1,0 +1,44 @@
+$(document).ready(function() {
+    var aType = $("#addressbooktype");
+
+    var searchAbook = function(input, page, callback) {
+        $.ajax({ url: "@{AbookQueryR}"
+               , dataType: 'json'
+               , data: { q : input }
+        })
+        .done(function(data) {
+            addrs = [];
+            if (data) {
+                $(data).each(function() {
+                    addrs.push({id: this, text: this});
+                });
+            }
+            if (callback)
+                callback({results: addrs, more: false});
+            else
+                console.log(addrs);
+        })
+        .fail(function(xhr, st, err) {
+            console.log("Error " + err);
+        });
+    };
+
+    //Set the address book type based on the dropdown.  The google
+    //contacts is set in a separate change handler which is only
+    //loaded depending on the settings.
+    aType.change(function() {
+        var v = $(this).val();
+        window.localStorage.setItem("Address Book Type", v);
+        if (v == 0)
+            window.searchContacts = undefined;
+        else if (v == 1)
+            window.searchContacts = searchAbook;
+    });
+
+    // Load the old format type
+    var oldformat = window.localStorage.getItem("Address Book Type");
+    if (oldformat) {
+        aType.val(oldformat);
+        aType.change();
+    }
+});

@@ -1,0 +1,49 @@
+<div .navbar .navbar-static-top .navbar-inverse>
+  <div .navbar-inner>
+    <div .container>
+      <a .brand href=@{HomeR}>Notmuch
+      <a .btn .btn-navbar data-toggle="collapse" data-target=".nav-collapse">
+          <span .icon-bar>
+          <span .icon-bar>
+          <span .icon-bar>
+      <div .nav-collapse .collapse>
+          <ul .nav>
+              <li>
+                  <form .navbar-search method=post action="@{SearchPostR}">
+                      <input type=text .search-query name=q placeholder=Search>
+              <li .dropdown>
+                  <a .dropdown-toggle data-toggle="dropdown" data-target="#">_{MsgFolders}
+                      <b .caret>
+                  <ul .dropdown-menu>
+                      $forall folder <- folders
+                          $if not (snd folder == snd (head folders))
+                              <li .divider>
+                          <li>
+                              <a href=@{SearchR (snd folder)}>#{fst folder}
+                          <li>
+                              <a href=@{ThreadPagerR (snd folder)}>_{MsgInPager (fst folder)}
+          <ul .nav .pull-right>
+            <li>
+                <a href=@{ComposeR}>_{MsgCompose}
+            <li>
+                <form .navbar-form method=post enctype=#{newEnctype} action=@{RawCommandR}>
+                    ^{newWidget}
+                    <button type=submit .btn .btn-link #checknewbutton>_{MsgCheckNew}
+            <li>
+                <a href=@{RawCommandR}>_{MsgRaw}
+            <li>
+                <a href=@{AuthR LogoutR}>_{MsgLogout}
+
+<div .container>
+  $maybe msg <- mmsg
+    <div #message>#{msg}
+  ^{widget}
+
+  <footer>
+    <p>
+      <a href="http://notmuchmail.org/">Notmuch
+      is released under the <a href="http://www.gnu.org/licenses/gpl.html">GPLv3+</a>.
+      <a href="https://bitbucket.org/wuzzeb/notmuch-web">Notmuch-web
+      is released under the
+      <a href="http://www.gnu.org/licenses/agpl.html">AGPLv3+
+      (<a href="#{sourceLink}">source</a>).

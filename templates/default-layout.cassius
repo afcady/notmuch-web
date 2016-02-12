@@ -1,0 +1,29 @@
+footer
+    text-align: center
+    font-size: small
+#checknewbutton
+    color: rgb(153, 153, 153)
+    text-decoration: none
+    text-shadow: 0px -1px 0px rgba(0,0,0,0.25)
+#checknewbutton:hover
+    color: rgb(242, 242, 242)
+div.nav-collapse.in.collapse #checknewbutton
+    font-weight: bold
+    text-align: left
+    padding-left: 0px
+div.nav-collapse.in.collapse #checknewbutton:hover
+    color: rgb(153, 153, 153)
+    background-color: rgb(17, 17, 17)
+div.nav-collapse.in.collapse form.navbar-form
+    border: none
+    box-shadow: none
+@media (max-width: 699px)
+    body
+        padding-right: 5px
+        padding-left: 5px
+.only-noscript
+    display: none
+
+/* Fix for https://github.com/twitter/bootstrap/issues/7968 */
+.dropdown-backdrop
+    position: static

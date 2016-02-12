@@ -1,0 +1,80 @@
+//Some documentation
+//https://developers.google.com/api-client-library/javascript/features/authentication
+//https://developers.google.com/api-client-library/javascript/features/cors
+//https://developers.google.com/google-apps/contacts/v3/
+
+// loadGoogleAuth will be called once the google authentication script has
+// been loaded, and we don't load the script until the document is ready so
+// the body of loadGoogleAuth can assume the document is ready.
+function loadGoogleAuth() {
+    var btn = $("#google-auth-button");
+
+
+    var handleAuth = function(authResult) {
+        if (authResult && !authResult.error) {
+            btn.addClass("hidden");
+        } else {
+            btn.removeClass("hidden");
+        }
+    };
+
+    btn.on('click', function() {
+        gapi.auth.authorize({client_id: btn.data("notmuch-client-id")
+                            , scope: 'https://www.google.com/m8/feeds'
+                            , immediate: false
+                            }, handleAuth);
+
+    });
+
+    // Check auth on document load
+    gapi.auth.authorize({client_id: btn.data("notmuch-client-id")
+                        , scope: 'https://www.google.com/m8/feeds'
+                        , immediate: true
+                        }, handleAuth);
+
+    var searchGoogleContacts = function(input, page, callback) {
+        $.ajax({ url: 'https://www.google.com/m8/feeds/contacts/default/thin'
+               , dataType: 'json'
+               , data: { 'access_token' : gapi.auth.getToken().access_token
+                       , q : input
+                       , 'max-results' : 20
+                       , 'start-index': (page-1)*20 + 1
+                       , 'alt' : "json"
+                       , 'v' : '3.0'
+                       }
+        })
+        .done(function(data) {
+            var num = data.feed["openSearch$totalResults"]["$t"];
+            var addrs = [];
+            $(data.feed.entry).each(function() {
+                var name = this.title["$t"];
+                if ("gd$email" in this) {
+                    $(this["gd$email"]).each(function() {
+                        var a = name + " <" + this.address + ">"
+                        addrs.push({id: a, text: a});
+                    });
+                }
+            });
+            if (callback)
+                callback({results: addrs, more: num >= 20});
+            else
+                console.log(addrs);
+        })
+        .fail(function(xhr, st, err) {
+            alert("Error " + err);
+        });
+    };
+
+    // Set the address book based on the dropdown
+    $("#addressbooktype").change(function() {
+        if ($(this).val() == 2)
+            window.searchContacts = searchGoogleContacts;
+    });
+
+    if ($("#addressbooktype").val() == 2)
+        window.searchContacts = searchGoogleContacts;
+}
+
+$(document).ready(function() {
+    $.getScript("https://apis.google.com/js/auth.js?onload=loadGoogleAuth");
+});

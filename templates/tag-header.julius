@@ -1,0 +1,54 @@
+function notmuchUpdateTags(tagspan, data) {
+  tagspan.children("span").each(function(idx, elem) {
+      if ($.inArray(elem.textContent, data.remove) >= 0) {
+          $(elem).remove();
+      }
+      var i = $.inArray(elem.textContent, data.add);
+      if (i >= 0) {
+        data.add.splice(i, 1);
+      }
+  });
+  $.each(data.add, function(idx, tag) {
+      tagspan.append(" <span class='label label-info label-tag'>" + tag + "</span> ");
+  });
+  tagspan.trigger("notmuch:retag", data);
+}
+$(document).on("click", ".retag-button", function() {
+  var tagspan = $(this).parents("span.tags");
+  var retagform = $("#retag-csrf-form");
+
+  $.ajax({
+      type: 'POST',
+      data: retagform.serialize(),
+      dataType: 'json',
+      url: $(this).data('notmuch-url')
+  })
+  .done(function(data) {notmuchUpdateTags(tagspan, data);})
+  .fail(function(xhr, err, e) {
+      alert("Error " + err + " " + e);
+  });
+});
+$(document).on("click", ".retag-custom-button", function() {
+    $("#retag-custom-submit").data("notmuch-tagspan", $(this).parents("span.tags"));
+    $("#retag-custom-submit").data("notmuch-url", $(this).data("notmuch-url"));
+    $("#retag-custom-modal").modal();
+});
+$("#retag-custom-submit").click(function () {
+    var tagspan = $(this).data("notmuch-tagspan");
+    var url = $(this).data("notmuch-url");
+    var frm = $("#retag-custom-form");
+
+    $.ajax({
+         type: 'POST',
+         data: frm.serialize(),
+         dataType: 'json',
+         url: url
+     })
+     .done(function(data) {
+         notmuchUpdateTags(tagspan, data);
+         $("#retag-custom-modal").modal("hide");
+      })
+     .fail(function(xhr, err, e) {
+         alert("Error " + err + " " + e);
+     });
+});

@@ -1,0 +1,27 @@
+/static StaticR EmbeddedStatic getStatic
+/auth   AuthR   Auth   getAuth
+
+/favicon.ico FaviconR GET
+/robots.txt RobotsR GET
+/opensearch.xml OpenSearchR GET
+
+/                               HomeR GET
+/search                         SearchPostR POST
+/search/#String                 SearchR GET
+/retag/thread/#ThreadID/#Text RetagThreadR POST
+/customretag/thread/#ThreadID   CustomRetagThreadR POST
+
+/thread/#ThreadID                 ThreadR GET
+/retag/message/#MessageID/#Text RetagMessageR POST
+/customretag/message/#MessageID   CustomRetagMessageR POST
+/messagepart/#MessageID/#Int      MessagePartR GET
+
+/threadpager/#String ThreadPagerR GET
+
+/rawcommand RawCommandR GET POST
+
+/compose             ComposeR GET POST
+/reply/#MessageID    ReplyR GET
+/replyall/#MessageID ReplyAllR GET
+/previewmsg          PreviewMessageR POST
+/abook/query         AbookQueryR GET

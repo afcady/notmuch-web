@@ -1,0 +1,15 @@
+<ul .unstyled .tree>
+    $forall node <- forestWithIds
+        $with m <- TR.rootLabel (fst node)
+            <li>
+                <div .accordion>
+                    <div .accordion-group>
+                        <div .accordion-heading>
+                            <a .message-toggle data-toggle="collapse" data-target="##{snd node}">
+                                #{messageDateRel m} - #{messageFrom m}
+                            ^{tagWidget (Right m)}
+                            <a href="@{ReplyR (messageId m)}">Reply
+                            <a href="@{ReplyAllR (messageId m)}">Reply All
+                        <div .accordion-body .collapse :isUnread m:.in id=#{snd node}>
+                            ^{messageWidget m}
+                ^{messages (TR.subForest (fst node))}

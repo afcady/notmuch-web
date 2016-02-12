@@ -1,0 +1,34 @@
+@media (min-width: 700px) {
+    div.message-part {
+        margin-left: 5px;
+    }
+    ul.tree, ul.tree ul.tree {
+        list-style-type: none;
+        background: url(@{StaticR img_vline_png}) repeat-y;
+        margin: 0;
+        padding: 0;
+    }
+    ul.tree ul.tree {
+        margin-left: 10px;
+    }
+    ul.tree > li {
+        margin: 0;
+        padding: 0 12px;
+        line-height: 20px;
+        background: url(@{StaticR img_node_png}) no-repeat;
+    }
+    ul.tree > li:last-child {
+        background: #fff url(@{StaticR img_lastnode_png}) no-repeat;
+    }
+    div#messageThread > ul.tree > li:first-child {
+        background: #fff;
+    }
+}
+a.message-toggle {
+    cursor: pointer;
+}
+blockquote p {
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 20px;
+}

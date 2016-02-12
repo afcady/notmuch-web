@@ -1,0 +1,12 @@
+$(document).on("notmuch:retag", "span.tags", function(e, data) {
+    if ($.inArray("unread", data.remove) >= 0) {
+        $(this).parents("div.accordion-group").children("div.accordion-body").each(function(idx, b) {
+            $(b).collapse('hide');
+        });
+    }
+});
+$(document).ready(function() {
+    if ($(window).width() < 700) {
+        $(".text-as-markdown a[data-toggle=tab]").click();
+    }
+});

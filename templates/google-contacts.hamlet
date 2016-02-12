@@ -1,0 +1,8 @@
+<div .control-group>
+    <label .control-label for="addressbooktype">_{MsgAddrBookType}
+    <div .controls>
+        <select name="addressbooktype" #addressbooktype>
+            <option value="0">_{MsgNoAddressBook}
+            <option value="1">_{MsgAbook}
+            <option value="2">_{MsgGoogle}
+        <button #google-auth-button .btn .hidden data-notmuch-client-id="#{clientID}">_{MsgGoogleAuth}

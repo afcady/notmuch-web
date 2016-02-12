@@ -1,0 +1,20 @@
+textarea#Body {
+    height: 200px;
+}
+textarea#hdrs {
+    white-space: nowrap;
+    overflow: auto;
+}
+@media (max-width: 800px) {
+    textarea#Body, input#subj {
+        width: 100%;
+    }
+}
+@media (min-width: 801px) {
+    textarea#Body, input#subj {
+        width: 650px;
+    }
+    textarea#hdrs, div.controls input, div.controls select {
+        width: 400px;
+    }
+}

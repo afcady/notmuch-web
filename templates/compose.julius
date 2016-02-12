@@ -1,0 +1,150 @@
+$(document).ready(function() {
+    //resize body field: copied from jquery-mobile
+    var input = $("textarea#body"),
+        extraLineHeight = 15,
+        keyupTimeoutBuffer = 100,
+        keyupTimeout;
+
+    input._keyup = function() {
+        var scrollHeight = input[ 0 ].scrollHeight,
+        clientHeight = input[ 0 ].clientHeight;
+
+        if ( clientHeight < scrollHeight ) {
+            input.height( scrollHeight + extraLineHeight );
+        }
+    };
+
+    $(".addr-help").popover();
+
+    input.on( "keyup change input paste", function() {
+        clearTimeout( keyupTimeout );
+        keyupTimeout = setTimeout( input._keyup, keyupTimeoutBuffer );
+    });
+
+    //restore format setting
+    var oldformat = window.localStorage.getItem("Compose Body Format");
+    if (oldformat) {
+        $("#bdyfmt").val(oldformat);
+        if (oldformat == 3) { //markdown
+            $("#previewbtn").removeClass("hidden");
+        }
+    }
+    $("#bdyfmt").change(function() {
+        var f = $("#bdyfmt").val();
+        window.localStorage.setItem("Compose Body Format", f);
+        if (f == 3) { //markdown
+            $("#previewbtn").removeClass("hidden");
+        } else {
+            $("#previewbtn").addClass("hidden");
+        }
+    });
+
+    //The preview button
+    $("#previewbtn").on("click", function() {
+        var frm = $("#preview-form");
+        var data = frm.serializeArray();
+        $(data).each(function() {
+            if (this.name == "f2")
+                this.value = $("#Body").val();
+        });
+        $.ajax({
+            type: "POST",
+            data: $.param(data),
+            dataType: 'html',
+            url: frm.attr('action')
+        })
+        .done(function(data) {
+            $("#preview-body").html(data);
+            $("#preview-modal").modal();
+        })
+        .fail(function(xhr, err, e) {
+            alert("Error " + err + " " + e);
+        });
+        return false;
+    });
+
+    //parse a comma separated list of addresses, supporting commas inside quotes in the name
+    var parseAddrs = function(str) {
+        var pttrn = /( *"[^"]*"[^,"]*|[^",]+)(,)?/g;
+        var data = [];
+
+        while (m = pttrn.exec(str)) {
+            if (m[1]) {
+                data.push({txt: m[1], comma: m[2] !== undefined});
+            }
+        }
+
+        return data;
+    };
+
+    // Now the address fields
+    $(".address-field").each(function() {
+        $(this).select2({
+            data: [],
+            multiple: true,
+            selectOnBlur: true,
+            width: 'element',
+            minimumInputLength: 3,
+            createSearchChoice: function(term) {
+                return {id: term, text: term};
+            },
+            initSelection: function(element, callback) {
+                var data = []
+                $(parseAddrs(element.val())).each(function() {
+                    data.push({id: this.txt, text: this.txt});
+                });
+                callback(data);
+            },
+            query: function(options) {
+                if (window.searchContacts)
+                    window.searchContacts(options.term, options.page, options.callback);
+                else
+                    options.callback({results:[], more: false});
+            },
+            tokenizer: function(input, selection, selectCallback, opts) {
+                var data = parseAddrs(input);
+                var ret = '';
+                $(data).each(function() {
+                    if (this.comma) {
+                        selectCallback({id: this.txt, text: this.txt});
+                    } else {
+                        ret += this.txt;
+                    }
+                });
+                return ret;
+            },
+            formatSelection: function(addr, node) {
+                if (addr.id != "") {
+                    var esc = this.escapeMarkup;
+                    var m = addr.id.match(/([^<]*)(<([^>]*)>)?/);
+                    if (m === undefined || m[1] === undefined) {
+                        return addr.text;
+                    } else {
+                        node.replaceWith("<div title='"+esc(addr.text)+"'>"+esc(m[1])+"</div>");
+                        return undefined;
+                    }
+                }
+            },
+        });
+
+        var addrbox = $(this);
+        //var s2container = addrbox.prev("div.select2-container");
+        var s2container = addrbox.select2("container");
+        s2container.on("dblclick", "li.select2-search-choice", function() {
+            var data = addrbox.select2("data");
+
+            //Clear the clicked element
+            var item = $(this).children("div").attr("title");
+            var ndata = $.grep(data, function(i) {
+                return i.id != item;
+            });
+            addrbox.select2("data", ndata);
+
+            //Set it as the input
+            s2container.find("li.select2-search-field input").val(item);
+            addrbox.data("select2").resizeSearch();
+            addrbox.data("select2").focusSearch();
+            addrbox.select2("open");
+        });
+    });
+});

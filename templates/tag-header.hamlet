@@ -1,0 +1,14 @@
+<form #retag-csrf-form enctype=#{retagEnc} style="display:none">
+    ^{retagWidget}
+<div #retag-custom-modal .modal .hide .fade>
+    <form #retag-custom-form enctype=#{customEnc}>
+        <div .modal-header>
+            <button type=button .close data-dismiss=modal aria-hidden=true>&times;
+            <h3>_{MsgMessageRetagging}
+        <div .modal-body>
+            <p>_{MsgSepTagsBySpace}
+            <fieldset>
+                ^{customWidget}
+        <div .modal-footer>
+            <button type=button .btn data-dismiss=modal aria-hidden=true>_{MsgClose}
+            <button #retag-custom-submit type=button .btn .btn-primary>_{MsgRetag}

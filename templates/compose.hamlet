@@ -1,0 +1,18 @@
+$forall e <- err
+    <div .alert>
+        #{e}
+<form enctype=#{enctype} method=post action=@{ComposeR}>
+    ^{widget}
+    <div .control-group>
+        <div .controls>
+            <button type="submit" .btn .btn-primary>_{MsgSend}
+            <button type="button" .btn .hidden #previewbtn>_{MsgPreview}
+<form #preview-form enctype=#{previewEnctype} style="display:none" method=post action=@{PreviewMessageR}>
+    ^{previewWidget}
+<div .modal .hide .fade #preview-modal>
+    <div .modal-header>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
+        <h3>_{MsgPreview}
+    <div .modal-body #preview-body>
+    <div .modal-footer>
+        <button type="button" .btn data-dismiss="modal" aria-hidden="true">_{MsgClose}

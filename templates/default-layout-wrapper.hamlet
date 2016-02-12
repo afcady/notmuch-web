@@ -1,0 +1,20 @@
+$newline never
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>#{pageTitle pc}
+        <meta name="author" content="Notmuch">
+        <meta name="description" content="Notmuch Email">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <link rel="search" href=@{OpenSearchR} type="application/opensearchdescription+xml" title="Notmuch Web">
+        ^{pageHead pc}
+        <noscript>
+            <style>
+                td.only-noscript { display: table-cell; }
+                th.only-noscript { display: inline; }
+                .hide-noscript { display: none; }
+                .collapse { height: auto; }
+                td.search-link { cursor: auto; }
+    <body>
+        ^{pageBody pc}
