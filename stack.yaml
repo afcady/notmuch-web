@@ -9,11 +9,8 @@ packages:
 - '.'
 # Packages to be pulled from upstream that are not in the resolver (e.g., acme-missiles-0.3)
 extra-deps:
-- attoparsec-conduit-1.1.0
 - process-conduit-1.2.0.1
 - shakespeare-text-1.1.0
-- text-1.2.2.0
-- yaml-0.8.15.3
 
 # Override default flag values for local packages and extra-deps
 flags: {}
