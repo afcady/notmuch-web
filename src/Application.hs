@@ -44,13 +44,7 @@ import Handler.Raw
 import Handler.Tags
 import Handler.View
 
-#if MIN_VERSION_http_conduit(2,0,0)
-import Network.HTTP.Conduit (newManager, conduitManagerSettings)
-#else
-import Network.HTTP.Conduit (newManager, ManagerSettings, def)
-conduitManagerSettings :: ManagerSettings
-conduitManagerSettings = def
-#endif
+import Network.HTTP.Conduit
 
 mkYesodDispatch "App" resourcesApp
 
@@ -65,7 +59,7 @@ makeApplication conf = do
 
 makeFoundation :: AppConfig DefaultEnv Extra -> IO App
 makeFoundation conf = do
-    manager <- newManager conduitManagerSettings
+    manager <- newManager tlsManagerSettings
 
     -- Load message ID domain if it has not been set
     conf' <- case (extraMessageIDDomain $ appExtra conf) of
