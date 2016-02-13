@@ -147,6 +147,7 @@ library
                      , yesod                         >= 1.2
                      , yesod-auth
                      , yesod-static                  >= 1.2.1
+                     , yesod-form                    >= 1.3.8
                      , resourcet
     if flag(no-icu)
         build-depends:
@@ -158,7 +159,7 @@ executable         notmuch-web
         Buildable: False
 
     main-is:           src/main.hs
-    build-depends:     base
+    build-depends:     base >= 4.8.0.0
                      , notmuch-web
                      , pwstore-fast
                      , text

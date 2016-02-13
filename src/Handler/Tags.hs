@@ -73,8 +73,9 @@ retagForm = renderDivs $ pure ()
 
 customRetagForm :: Form (Maybe T.Text, Maybe T.Text)
 customRetagForm = 
-    renderBootstrap $ (,) <$> aopt textField (FieldSettings (SomeMessage MsgTagsToAdd) Nothing (Just "add") Nothing []) Nothing
-                          <*> aopt textField (FieldSettings (SomeMessage MsgTagsToRemove) Nothing (Just "remove") Nothing []) Nothing
+    renderBootstrap3 BootstrapBasicForm $
+    (,) <$> aopt textField (FieldSettings (SomeMessage MsgTagsToAdd) Nothing (Just "add") Nothing []) Nothing
+        <*> aopt textField (FieldSettings (SomeMessage MsgTagsToRemove) Nothing (Just "remove") Nothing []) Nothing
 
 -- | A widget that contains the support elements for retagging, including the forms
 -- and javascript.  This widget must be included only ONCE in the page.  A notmuch:retag

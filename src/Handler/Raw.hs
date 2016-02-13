@@ -26,7 +26,7 @@ rawForm = T.unpack <$> areq textField cmd Nothing
 getRawCommandR :: Handler Html
 getRawCommandR = defaultLayout $ do
     setTitleI MsgRaw
-    ((result,widget),enctype) <- liftHandlerT $ runFormPost $ renderBootstrap rawForm
+    ((result,widget),enctype) <- liftHandlerT $ runFormPost $ renderBootstrap3 BootstrapBasicForm rawForm
     [whamlet|
 <p>_{MsgRawWarning}
 <form method=post enctype=#{enctype} action=@{RawCommandR}>
@@ -42,7 +42,7 @@ getRawCommandR = defaultLayout $ do
 
 postRawCommandR :: Handler Html
 postRawCommandR = do
-    ((result,_),_) <- runFormPost $ renderBootstrap rawForm
+    ((result,_),_) <- runFormPost $ renderBootstrap3 BootstrapBasicForm rawForm
     command <- case result of
         FormMissing -> invalidArgs ["Form is missing"]
         FormFailure msg -> invalidArgs msg
