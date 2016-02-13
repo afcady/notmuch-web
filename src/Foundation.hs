@@ -81,7 +81,7 @@ instance Yesod App where
         pjax <- isPjax
         if pjax
           then do pc <- widgetToPageContent widget
-                  giveUrlRenderer $ pageBody pc
+                  withUrlRenderer $ pageBody pc
 
           else do pc <- widgetToPageContent $ do
                           addStylesheet $ StaticR css_bootstrap_min_css
@@ -95,7 +95,7 @@ instance Yesod App where
 
                           $(widgetFile "default-layout")
 
-                  giveUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
+                  withUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
 
     -- The opensearch.xml file must include {searchTerms} in the url template, but
     -- the default url renderer percent encodes the braces which doesn't work.  So we

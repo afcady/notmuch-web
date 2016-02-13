@@ -56,4 +56,4 @@ postSearchPostR = do
     redirect $ SearchR $ T.unpack s
 
 getOpenSearchR :: Handler RepXml
-getOpenSearchR = repXml <$> giveUrlRenderer $(hamletFile "templates/opensearch.hamlet")
+getOpenSearchR = repXml <$> withUrlRenderer $(hamletFile "templates/opensearch.hamlet")
