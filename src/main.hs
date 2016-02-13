@@ -21,7 +21,7 @@ import Control.Monad        (when)
 import Crypto.PasswordStore (makePassword)
 import Data.Text.Encoding   (encodeUtf8, decodeUtf8)
 import Data.Text.IO         (getLine, putStrLn)
-import Data.Version         (Version(..))
+import Data.Version         (makeVersion)
 import NotmuchCmd           (notmuchVersion)
 import Settings             (parseExtra)
 import System.Environment   (getArgs)
@@ -44,7 +44,7 @@ genPassword = do
 main :: IO ()
 main = do
   v <- notmuchVersion
-  when (v < Version {versionBranch = [0,15], versionTags = []}) $ do
+  when (v < makeVersion [0,15]) $ do
       hPutStrLn stderr "notmuch-web requires at least notmuch 0.15"
       exitWith $ ExitFailure 1
 
