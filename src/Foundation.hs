@@ -22,10 +22,8 @@ module Foundation where
 import Prelude
 
 import Blaze.ByteString.Builder.Char.Utf8 (fromText)
-import Control.Applicative
 import Data.ByteString (ByteString)
 import Data.Maybe (isJust)
-import Data.Monoid (mappend)
 import Data.Text (Text)
 import Data.Text.Encoding (encodeUtf8)
 import Network.HTTP.Conduit (Manager)

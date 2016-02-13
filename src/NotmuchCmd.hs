@@ -52,7 +52,7 @@ module NotmuchCmd (
 
 import Prelude
 import Control.Exception (Exception, throw)
-import Control.Applicative
+import Control.Monad
 import Control.Monad.IO.Class (MonadIO(..))
 import Data.Aeson
 import Data.Aeson.Types (Parser)
@@ -61,6 +61,7 @@ import Data.Conduit
 import Data.Conduit.Attoparsec (sinkParser)
 import Data.Conduit.Process
 import Data.Monoid ((<>))
+import Data.Maybe
 import Data.Time.Calendar (Day(..))
 import Data.Time.Clock
 import Data.Time.Clock.POSIX
@@ -68,7 +69,6 @@ import Data.Typeable (Typeable)
 import Data.Version (Version(..), parseVersion)
 import Text.Blaze (ToMarkup(..))
 import Text.ParserCombinators.ReadP (readP_to_S)
-import System.Process
 import System.Exit
 import Yesod (PathPiece)
 import Control.Monad.Trans.Resource
@@ -186,12 +186,12 @@ data Message = Message {
 } deriving (Show,Eq)
 
 messageSubject :: Message -> T.Text
-messageSubject (Message {messageHeaders = h}) =
-    maybe "" id $ M.lookup "subject" h
+messageSubject Message {messageHeaders = h} =
+    fromMaybe "" $ M.lookup "subject" h
 
 messageFrom :: Message -> T.Text
-messageFrom (Message {messageHeaders = h}) =
-    maybe "" id $ M.lookup "from" h
+messageFrom Message {messageHeaders = h} =
+    fromMaybe "" $ M.lookup "from" h
 
 instance FromJSON Message where
     parseJSON (Object v) = Message <$> v .: "id"
@@ -204,7 +204,7 @@ instance FromJSON Message where
                                    <*> v .: "tags"
                                    <*> v .: "filename"
     parseJSON (Array _) = return $ Message (MessageID "") "" defTime M.empty [] True False [] ""
-        where defTime = UTCTime (ModifiedJulianDay 0) (fromInteger 0)
+        where defTime = UTCTime (ModifiedJulianDay 0) 0
     parseJSON x = fail $ "Error parsing message: " ++ show x
 
 data Thread = Thread { threadForest :: TR.Forest Message }
@@ -261,9 +261,7 @@ notmuchTag :: MonadIO m => [String] -- ^ new tags
 notmuchTag new remove search = do
     let args = "tag" : map ('+':) new ++ map ('-':) remove ++ words search
     (exit,_,err) <- notmuchRaw args
-    if exit == ExitSuccess
-        then return ()
-        else throw $ NotmuchError err
+    unless (exit == ExitSuccess) $ throw (NotmuchError err)
 
 notmuchTagMessage :: MonadIO m => [String] -- ^ new tags
                                -> [String] -- ^ remove tags
