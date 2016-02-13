@@ -19,7 +19,6 @@ module Settings where
 
 import Prelude
 
-import Control.Applicative
 import Data.Aeson
 import Data.ByteString (ByteString)
 import Data.Default (def)
