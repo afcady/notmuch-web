@@ -7,10 +7,14 @@ resolver: lts-5.2
 # Local packages, usually specified by relative directory name
 packages:
 - '.'
+- location:
+    git: git@github.com:afcady/yesod-auth-pam.git
+    commit: 9287f2c7ee1011edcd5cf14c5608ab69ad407008
 # Packages to be pulled from upstream that are not in the resolver (e.g., acme-missiles-0.3)
 extra-deps:
 - process-conduit-1.2.0.1
 - shakespeare-text-1.1.0
+- pam-0.1
 
 # Override default flag values for local packages and extra-deps
 flags: {}

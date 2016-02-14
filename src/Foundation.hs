@@ -24,7 +24,7 @@ import Prelude
 import Blaze.ByteString.Builder.Char.Utf8 (fromText)
 import Data.ByteString (ByteString)
 import Data.Maybe (isJust)
-import Data.Text (Text)
+import Data.Text (Text, pack)
 import Data.Text.Encoding (encodeUtf8)
 import Network.HTTP.Conduit (Manager)
 import Network.Wai (requestHeaders)
@@ -35,9 +35,11 @@ import Text.Hamlet (hamletFile)
 import Text.Jasmine (minifym)
 import Yesod
 import Yesod.Auth
+import Yesod.Auth.Pam
 import Yesod.Default.Config
 import Yesod.EmbeddedStatic
 import qualified Crypto.PasswordStore as PS
+import System.Posix.User (getLoginName)
 
 data App = App
     { settings :: AppConfig DefaultEnv Extra
@@ -64,13 +66,17 @@ instance Yesod App where
         mauth <- maybeAuthId
         case mauth of
           Nothing -> return AuthenticationRequired
-          Just _ -> return Authorized
+          Just ident -> do
+            processIdent <- pack <$> liftIO getLoginName
+            return $ if ident == processIdent
+                        then Authorized
+                        else AuthenticationRequired
 
     authRoute _ = Just $ AuthR LoginR
 
     -- Store session data on the client in encrypted cookies,
     -- default session idle timeout is 120 minutes
-    makeSessionBackend _ = fmap Just $ defaultClientSessionBackend 120 "config/client_session_key.aes"
+    makeSessionBackend _ = Just <$> defaultClientSessionBackend 120 "config/client_session_key.aes"
 
     defaultLayout widget = do
         master <- getYesod
@@ -140,7 +146,7 @@ instance YesodAuth App where
     loginDest _  = HomeR
     logoutDest _ = HomeR
     getAuthId (Creds _ n _) = return $ Just n
-    authPlugins _ = [passwordPlugin]
+    authPlugins _ = [authPam]
     authHttpManager _ = error "Manager not needed"
     maybeAuthId = lookupSession "_ID"
 
@@ -151,14 +157,7 @@ passwordPlugin = AuthPlugin "password" dispatch loginWidget
 
           loginR = AuthR (PluginR "password" ["login"])
 
-          loginWidget _ = do
-              ((_,widget),enctype) <- liftHandlerT $ runFormPostNoToken $ renderDivs loginForm
-              [whamlet|
-<form method=post enctype=#{enctype} action=@{loginR}>
-    ^{widget}
-    <input type=submit value=_{MsgLogin}>
-|]
-
+          postLoginR :: MonadTrans t => t (HandlerT App IO) ()
           postLoginR = lift $ do
               ((result,_),_) <- runFormPostNoToken $ renderDivs loginForm
               case result of
@@ -169,3 +168,11 @@ passwordPlugin = AuthPlugin "password" dispatch loginWidget
                       if PS.verifyPassword pwd hash
                         then setCreds True $ Creds "password" "notmuch" []
                         else permissionDenied "Invalid password"
+
+          loginWidget _ = do
+              ((_,widget),enctype) <- liftHandlerT $ runFormPostNoToken $ renderDivs loginForm
+              [whamlet|
+<form method=post enctype=#{enctype} action=@{loginR}>
+    ^{widget}
+    <input type=submit value=_{MsgLogin}>
+|]
