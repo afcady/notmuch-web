@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE RecordWildCards #-}
 module Foundation where
 
 import Prelude
@@ -45,7 +46,7 @@ data App = App
     { settings :: AppConfig DefaultEnv Extra
     , getStatic :: EmbeddedStatic
     , httpManager :: Manager
-    , passwordHash :: ByteString -- ^ hashed password from "Crypto.PasswordStore"
+    , passwordHash :: Maybe ByteString -- ^ hashed password from "Crypto.PasswordStore"
     }
 
 mkMessage "App" "messages" "en"
@@ -145,13 +146,18 @@ instance YesodAuth App where
     type AuthId App = Text
     loginDest _  = HomeR
     logoutDest _ = HomeR
-    getAuthId (Creds _ n _) = return $ Just n
-    authPlugins _ = [authPam]
+    authPlugins App{..} = case
+      passwordHash of
+        Just expected -> [passwordPlugin expected]
+        Nothing -> [authPam]
     authHttpManager _ = error "Manager not needed"
+    authenticate Creds{..} | credsPlugin == "posixpam" = Authenticated <$> return credsIdent
+                           | credsPlugin == "password" = Authenticated . pack <$> liftIO getLoginName
+                           | otherwise = return $ ServerError "unrecognized credsPlugin"
     maybeAuthId = lookupSession "_ID"
 
-passwordPlugin :: AuthPlugin App
-passwordPlugin = AuthPlugin "password" dispatch loginWidget
+passwordPlugin :: ByteString -> AuthPlugin App
+passwordPlugin expectedPassword = AuthPlugin "password" dispatch loginWidget
     where dispatch "POST" ["login"] = postLoginR >>= sendResponse
           dispatch _ _ = notFound
 
@@ -163,9 +169,8 @@ passwordPlugin = AuthPlugin "password" dispatch loginWidget
               case result of
                   FormMissing -> invalidArgs ["Form is missing"]
                   FormFailure msg -> invalidArgs msg
-                  FormSuccess pwd -> do
-                      hash <- passwordHash <$> getYesod
-                      if PS.verifyPassword pwd hash
+                  FormSuccess pwd ->
+                      if PS.verifyPassword pwd expectedPassword
                         then setCreds True $ Creds "password" "notmuch" []
                         else permissionDenied "Invalid password"
 

@@ -64,7 +64,7 @@ instance FromJSON RetagEntry where
     parseJSON _ = fail "Retag is not an object"
 
 data Extra = Extra
-    { extraHashedPwd  :: ByteString
+    { extraHashedPwd  :: Maybe ByteString
     , extraFolders :: [(Text, String)]
     , extraRetag :: [RetagEntry]
     , extraFromAddresses :: [Text]
@@ -77,7 +77,7 @@ data Extra = Extra
 
 parseExtra :: DefaultEnv -> Object -> Parser Extra
 parseExtra _ o = do
-    pwd       <- encodeUtf8 <$> o .: "hashed-password"
+    pwd       <- fmap encodeUtf8 <$> o .:? "hashed-password"
     fdl       <- o .: "folders" >>= mapM parseFolder
     retag     <- o .: "retag"
     from      <- o .:? "from-address" .!= "<test@example.com>"

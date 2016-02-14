@@ -81,7 +81,7 @@ Production:
   #
   # $ path/to/notmuch-web --make-password
   #
-  hashed-password: "x"
+  # hashed-password: "x"
 
   # The sent box is the folder where sent messages are saved for future indexing by notmuch new. If
   # the setting is missing, the sent messages are not saved.
@@ -106,5 +106,4 @@ Testing:
 
 Staging:
   approot: "http://localhost:3000"
-  hashed-password: "x"
   <<: *defaults
