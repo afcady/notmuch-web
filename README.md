@@ -1,5 +1,19 @@
 # Notmuch Web Client
 
+## Quickstart
+
+~~~ {.bash}
+$ git clone https://github.com/afcady/notmuch-web.git
+$ cd notmuch-web
+$ stack build
+$ stack exec notmuch-web Production
+~~~
+
+You can now visit [http://localhost:3000](http://localhost:3000) and use your
+system username and password.
+
+## About
+
 This project is an email client for [notmuch](http://notmuchmail.org) written in
 [Haskell](http://www.haskell.org) and [Yesod](http://www.yesodweb.com).  The code implements a web
 server and uses [bootstrap](http://twbs.github.io/bootstrap/) and [jquery](http://jquery.com/)
@@ -35,20 +49,7 @@ for the UI.  The current features are
 
 [ChangeLog](https://bitbucket.org/wuzzeb/notmuch-web/src/tip/ChangeLog)
 
-# Quickstart
-
-To quickly test out the client on linux, make sure you have libgmp and zlib installed,
-[download the latest binary](https://bitbucket.org/wuzzeb/notmuch-web/downloads), extract the
-tarball, then run
-
-~~~ {.bash}
-$ mv config/settings.example.yml config/settings.yml
-$ ./notmuch-web Testing
-~~~
-
-You can now visit [http://localhost:3000](http://localhost:3000) and use "hunter2" as the password.
-
-# Install
+## Install
 
 #### Binaries 
 
@@ -64,32 +65,6 @@ versions, so I could not link against a version of libicu that worked on many di
 restriction will be removed once the next version of notmuch is released (it will include some
 patches I submitted).
 
-#### Source, latest released version
-
-To compile the latest release from source, install the [Haskell
-Platform](http://www.haskell.org/platform/).  Next, install notmuch-web from the latest released
-version on [hackage](http://hackage.haskell.org/package/notmuch-web).  To do this, from the shell
-run
-
-~~~ {.bash}
-$ cabal update
-$ cd ~/software/notmuch-build-dir  # Or some path
-$ cabal sandbox init               # Requires Cabal 1.18, can be skipped
-$ cabal install notmuch-web
-~~~
-
-The binary will appear at `.cabal-sandbox/bin/notmuch-web` or `~/.cabal/bin/notmuch-web` and the
-configuration files (see below) are in either `.cabal-sandbox/share/notmuch-web-version` or
-`~/.cabal/share/notmuch-web-version` depending on if you used a sandbox.
-
-#### Source, from bitbucket
-
-To compile from bitbucket, install the Haskell Platform and then run "cabal update".  Next, clone
-from bitbucket and within the notmuch-web directory, run `cabal sandbox init` (if you have Cabal
-1.18) and then `cabal install --only-dependencies`.  Next, run "cabal install yesod-bin"  (yesod-bin
-is a development helper binary).  You can now run `yesod devel` to start the development server or
-use the package.sh script to build a tarball.
-
 #### Keter
 
 Although I haven't used it, you might investigate [keter](https://github.com/snoyberg/keter) for
@@ -97,7 +72,7 @@ automatic building and deployment. See [this blog
 post](http://www.yesodweb.com/blog/2012/05/keter-app-deployment) and [this
 one](http://www.yesodweb.com/blog/2012/05/keter-its-alive) for more information.
 
-# Configuration
+## Configuration
 
 When launching the notmuch-web binary, it expects several files to be located in one subdirectory
 of the current directory.  No other configuration or install is needed, so you can copy the
@@ -127,14 +102,9 @@ for each mode and notmuch-web will only load settings from the matching section 
 Using yaml references a collection of default settings are copied into each section of the
 configuration.
 
-The default settings.yml file is well commented so I won't explain it here.  The only required
-setting that must be edited before notmuch-web will run is "hashed-password", the hash of the
-password to access (see
-[pwstore](http://hackage.haskell.org/packages/archive/pwstore-fast/latest/doc/html/Crypto-PasswordStore.html)
-for the format).  You can generate the hashed password by running "notmuch-web --make-password".
-Other settings like "from-address" and "approot" should be set as well for proper operation.
+The default settings.yml file is well commented so I won't explain it here.
 
-# Running
+## Running
 
 To run, execute "notmuch-web Production".  This will start the server listening on the configured
 port.  notmuch-web accesses notmuch by launching the "notmuch" binary found in the PATH, so you must

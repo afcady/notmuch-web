@@ -4,7 +4,7 @@ Default: &defaults
 
   # AGPLv3 requires a link to the source code on every page.  If you have not changed the
   # source, you can leave it linked to my bitbucket page.
-  source-link: https://bitbucket.org/wuzzeb/notmuch-web/src
+  source-link: https://github.com/afcady/notmuch-web
 
   # The folders are the notmuch searches that are linked from the navigation bar.
   # The first folder is displayed on the home page.
@@ -75,7 +75,9 @@ Production:
   # The approot is the full URL to root of notmuch web.
   approot: "http://localhost:3000"
 
-  # You must set your hashed password.
+  # You may set a hashed password. If you do not specify this field, PAM
+  # authentication will be used instead.
+  #
   # See http://hackage.haskell.org/packages/archive/pwstore-fast/latest/doc/html/Crypto-PasswordStore.html
   # for the format. You can generate the password via
   #
