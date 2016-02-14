@@ -77,17 +77,17 @@ data Extra = Extra
 
 parseExtra :: DefaultEnv -> Object -> Parser Extra
 parseExtra _ o = do
-    pwd <- encodeUtf8 <$> o .: "hashed-password"
-    fdl <- o .: "folders" >>= mapM parseFolder
-    retag <- o .: "retag"
-    from <- o .:? "from-address" .!= "<test@example.com>"
-    fromlst <- o .:? "from-addresses"
+    pwd       <- encodeUtf8 <$> o .: "hashed-password"
+    fdl       <- o .: "folders" >>= mapM parseFolder
+    retag     <- o .: "retag"
+    from      <- o .:? "from-address" .!= "<test@example.com>"
+    fromlst   <- o .:? "from-addresses"
     let f = fromMaybe [from] fromlst
-    sent <- o .:? "sent-box"
-    dom <- o .:? "message-id-domain" .!= ""
-    gcid <- o .:? "google-client-id"
-    sl <- o .:? "source-link" .!= "https://bitbucket.org/wuzzeb/notmuch-web/src"
-    sendmail <- o .:? "sendmail" .!= []
+    sent      <- o .:? "sent-box"
+    dom       <- o .:? "message-id-domain" .!= ""
+    gcid      <- o .:? "google-client-id"
+    sl        <- o .:? "source-link" .!= "https://bitbucket.org/wuzzeb/notmuch-web/src"
+    sendmail  <- o .:? "sendmail" .!= []
     return $ Extra pwd fdl retag f sent dom gcid sl sendmail
 
 parseFolder :: Object -> Parser (Text, String)
